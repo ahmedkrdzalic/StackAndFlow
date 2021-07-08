@@ -2,19 +2,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 import { QuestionContext } from "../QuestionContext"
+import { ENVContext } from "../ENVContext"
 import { Link } from "react-router-dom";
-
 
 
 export function Home() {
   const { user } = useContext(UserContext);
+  const { env } = useContext(ENVContext);
   const { question_id, setQuestion_id } = useContext(QuestionContext);
 
   const [ questions, setQuestions] = useState([]);
   const [ lastQuestion, setLastQuestion] = useState("");
 
   const load_questions = async () => {
-    await axios.get('http://localhost:8000/api/getquestions')
+    await axios.get(env + '/api/getquestions')
     .then(res => {
       const response = res.data;
       setQuestions(response);

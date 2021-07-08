@@ -1,12 +1,15 @@
 import React, { useContext } from "react";
 import { UserContext } from "../UserContext";
 import { Link } from "react-router-dom";
+import { ENVContext } from "../ENVContext"
+
 
 export function Nav() {
-    const { user, setUser } = useContext(UserContext);
+  const { env } = useContext(ENVContext);
+  const { user, setUser } = useContext(UserContext);
 
     const logout_handle = async () => {
-        await fetch('http://localhost:8000/api/logout', {
+        await fetch(env + '/api/logout', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
 import { QuestionContext } from "../QuestionContext"
+import { ENVContext } from "../ENVContext"
 import axios from "axios";
 
 export function QuestionPage() {
   const { user } = useContext(UserContext);
+  const { env } = useContext(ENVContext);
   const { question_id} = useContext(QuestionContext);
 
   const [ question, setQuestion] = useState({question: "123", answers: {content: "123"}});
@@ -17,7 +19,7 @@ export function QuestionPage() {
           id: question_id.toString(),
         }
         
-          axios.post('http://localhost:8000/api/getquestion', question_req)
+          axios.post(env + '/api/getquestion', question_req)
           .then(res => {
             const response = res.data;
             setQuestion(response);

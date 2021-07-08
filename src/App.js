@@ -11,21 +11,25 @@ import { QuestionPage } from "./pages/QuestionPage";
 
 import { UserContext } from "./UserContext";
 import { QuestionContext } from "./QuestionContext"
+import { ENVContext } from "./ENVContext"
 
 function App() {
 
   const [user, setUser] = useState(null);
   const [question_id, setQuestion_id] = useState(null);
+  const [env] = useState("https://stackandflow-backend.herokuapp.com");
 
   const user_val = useMemo(() => ({ user, setUser }), [user, setUser]);
   const question_val = useMemo(() => ({ question_id, setQuestion_id }), [question_id, setQuestion_id]);
+  const env_val = useMemo(() => ({ env }), [ env ]);
 
   return (
     <div className="App">
       <Router>
       <div>
         
-        <UserContext.Provider value={user_val}>
+        <UserContext.Provider value={env_val}>
+        <ENVContext.Provider value={user_val}>
           <Nav/>
 
           
@@ -38,6 +42,7 @@ function App() {
             <Route path="/" exact component={Home} />
             <Route path="/questionpage" component={QuestionPage}/>
           </QuestionContext.Provider>
+        </ENVContext.Provider>
         </UserContext.Provider>
       </div>
     </Router>

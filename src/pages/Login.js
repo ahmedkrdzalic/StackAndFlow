@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../UserContext";
-import { login } from "../utils/login";
 import { Redirect, Link } from "react-router-dom";
+import { ENVContext } from "../ENVContext"
+
 import axios from "axios"
 
 
 export function Login() {
+  const { env } = useContext(ENVContext);
   const { user, setUser } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
@@ -18,7 +20,7 @@ export function Login() {
         return;
     }
 
-    const response = await fetch('http://localhost:8000/api/login', {
+    const response = await fetch(env + '/api/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         credentials: 'include',
