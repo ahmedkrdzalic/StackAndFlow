@@ -20,7 +20,7 @@ export function Login() {
         return;
     }
 
-    const response = await fetch(env + '/api/login', {
+    const response = await fetch('https://stackandflow-backend.herokuapp.com/api/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         credentials: 'include',

@@ -19,7 +19,7 @@ export function QuestionPage() {
           id: question_id.toString(),
         }
         
-          axios.post(env + '/api/getquestion', question_req)
+          axios.post('https://stackandflow-backend.herokuapp.com/api/getquestion', question_req)
           .then(res => {
             const response = res.data;
             setQuestion(response);

@@ -15,7 +15,7 @@ export function Home() {
   const [ lastQuestion, setLastQuestion] = useState("");
 
   const load_questions = async () => {
-    await axios.get(env + '/api/getquestions')
+    await axios.get('https://stackandflow-backend.herokuapp.com/api/getquestions')
     .then(res => {
       const response = res.data;
       setQuestions(response);
