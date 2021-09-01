@@ -3,23 +3,39 @@ import { UserContext } from "../UserContext";
 import { QuestionContext } from "../QuestionContext"
 import { ENVContext } from "../ENVContext"
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 export function QuestionPage() {
   const { user } = useContext(UserContext);
   const { env } = useContext(ENVContext);
   const { question_id} = useContext(QuestionContext);
 
-  const [ question, setQuestion] = useState({question: "123", answers: {content: "123"}});
+  const [ question, setQuestion] = useState({question: "", answers: {content: ""}});
   const [ answers, setAnswers] = useState([]);
+  
+  const [ newanswer_content, setNewAnswer_content] = useState("");
 
+
+  const newAnswer = async (e) => {
+    //e.preventDefault();
+    
+    const newanswer = { 
+      "question_id": question_id.toString(),
+      "answerer_id": user.id.toString(),
+      "content": newanswer_content,
+    }
+    //https://stackandflow-backend.herokuapp.com/api/
+    axios.post(env + 'newanswer', newanswer)    
+  }
   
   useEffect (() => {
       if(question_id){
         const question_req = {
           id: question_id.toString(),
         }
-        
-          axios.post('https://stackandflow-backend.herokuapp.com/api/getquestion', question_req)
+          //https://stackandflow-backend.herokuapp.com/api/getquestion
+          axios.post(env + 'getquestion', question_req)
           .then(res => {
             const response = res.data;
             setQuestion(response);
@@ -30,18 +46,27 @@ export function QuestionPage() {
   }, []);
 
   let addanswer;
-  let aksquestion;
+  let askquestion;
+  let upvotesBTN;
+  let downvotesBTN;
   if(user){
-    aksquestion = (
-        <form action="/newquestion">
-            <button type="submit" className="btn btn-primary float-end" >Ask Question</button>
-        </form>
+    askquestion = (
+      <Link to="/newquestion" className="btn btn-primary float-end">Ask Question</Link>
     )
     addanswer = (
       <div className="d-flex justify-content-end">
-        <input type="text" className="form-control" placeholder="Write a comment."></input>
-        <button className="btn btn-primary mx-2">Comment</button>
+        <form className="form-control">
+          <input type="text" className="form-control my-1" placeholder="Write a comment." required
+                    onChange={e => setNewAnswer_content(e.target.value)}></input>
+          <Link to="/questionroute" className="btn btn-primary my-1" onClick={newAnswer}>Comment</Link>
+        </form>
       </div>
+    )
+    upvotesBTN = (
+      <button className="btn btn-success">UP</button>
+    )
+    downvotesBTN = (
+      <button className="btn btn-danger">DOWN</button>
     )
   }
 
@@ -72,13 +97,13 @@ export function QuestionPage() {
                 <div className="row">
                     <div className="col-md-10">
                         <div className="container">
-                          <h2>{question.question.title}</h2>
+                          <h1>{question.question.title}</h1>
                         </div>
                     </div>
                     <div className="col-md-2 ">
                       <h5 className="text-end text-black-50">{question.question.questioner_name}</h5>
                       <div className="text-end text-black-50">{question.question.date_time}</div>
-                      <div className="my-2">{aksquestion}</div>
+                      <div className="my-2">{askquestion}</div>
                     </div>
                 </div>
           </div>
@@ -87,14 +112,12 @@ export function QuestionPage() {
                     <div className="col-md-2">
                       <div  className="row">
                         <div className="col text-center">
-                          <h1>{question.upvotes}1</h1>
-                          <div className="m-1">Upvotes</div>
-                          <button className="btn btn-success">UP</button>
+                          <h1 className="text-success">{question.question.upvotes ? question.question.upvotes.toString() : 0 }</h1>
+                          {upvotesBTN}
                         </div>
                         <div className="col text-center">  
-                          <h1>{question.downvotes}3</h1>
-                          <div className="m-1">Downvotes</div>
-                          <button className="btn btn-danger">DOWN</button>
+                          <h1 className="text-danger">{question.question.downvotes ? question.question.downvotes.toString() : 0 }</h1>
+                          {downvotesBTN}
                         </div>
                       </div>
                     </div>
@@ -115,7 +138,7 @@ export function QuestionPage() {
       } else {
         question_content = (
           <div>
-            Question Not Selected! 
+            Question Not Selected! (click on question at Home page)
           </div>
         )
       }

@@ -12,30 +12,34 @@ export function Home() {
   const { question_id, setQuestion_id } = useContext(QuestionContext);
 
   const [ questions, setQuestions] = useState([]);
+
   const [ lastQuestion, setLastQuestion] = useState("");
 
-  const load_questions = async () => {
-    await axios.get('https://stackandflow-backend.herokuapp.com/api/getquestions')
-    .then(res => {
-      const response = res.data;
-      setQuestions(response);
-      //console.log(questions);
-    })
-  }
+  const [redirect, setRedirect] = useState(false);
 
-  load_questions();
+
+  useEffect (() => {
+    //https://stackandflow-backend.herokuapp.com/api/getquestions
+    //http://localhost:8000/api/
+    axios.get( env + 'getquestions')
+    .then(res => {
+      var results = res.data;
+      if (questions != []){
+        setQuestions(results);
+      }
+      
+    })}, []);
 
   const update_question_id = (id) => {
-    setQuestion_id(id)
+    setQuestion_id(id);
+    console.log(id);
   }
 
-  let aksquestion;
+  let askquestion;
 
   if(user){
-      aksquestion = (
-          <form action="/newquestion">
-              <button type="submit" className="btn btn-primary float-end" >Ask Question</button>
-          </form>
+      askquestion = (
+        <Link to="/newquestion" className="btn btn-primary float-end">Ask Question</Link>
       )
   }
 
@@ -46,7 +50,7 @@ export function Home() {
                   <div className="container"><h1>Recent Questions</h1></div>
               </div>
               <div className="col py-2">
-                  {aksquestion}
+                  {askquestion}
               </div>
           </div>
           <div className="row">
@@ -54,7 +58,8 @@ export function Home() {
                   <div className="container">
                       {questions.map((question, index) => (
                         <Link to="/questionpage" onClick={(() => update_question_id(question.id))} id={question.id} className="nav-link"><div className="d-block py-3 px-4 bg-secondary bg-gradient text-white  rounded" key={question.id} id={question.id}>{question.title} - {question.questioner_name}</div></Link>
-                      ))}                        
+                      ))}
+                      {console.log(questions, "global questions var")}
                   </div>
               </div>
               <div className="col-md-4">

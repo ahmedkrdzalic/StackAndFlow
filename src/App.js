@@ -8,6 +8,7 @@ import { Register } from "./pages/Register";
 import { MyProfile } from "./pages/MyProfile";
 import { NewQuestion } from "./pages/NewQuestion";
 import { QuestionPage } from "./pages/QuestionPage";
+import { QuestionRoute } from "./pages/QuestionRoute";
 
 import { UserContext } from "./UserContext";
 import { QuestionContext } from "./QuestionContext"
@@ -17,7 +18,8 @@ function App() {
 
   const [user, setUser] = useState(null);
   const [question_id, setQuestion_id] = useState(null);
-  const [env] = useState("https://stackandflow-backend.herokuapp.com");
+  const [env] = useState("https://stackandflow-backend.herokuapp.com/api/");
+  //const [env] = useState("http://localhost:8000/api/");
 
   const user_val = useMemo(() => ({ user, setUser }), [user, setUser]);
   const question_val = useMemo(() => ({ question_id, setQuestion_id }), [question_id, setQuestion_id]);
@@ -28,8 +30,9 @@ function App() {
       <Router>
       <div>
         
-        <UserContext.Provider value={env_val}>
-        <ENVContext.Provider value={user_val}>
+        <UserContext.Provider value={user_val}>
+        <ENVContext.Provider value={env_val}>
+          
           <Nav/>
 
           
@@ -41,6 +44,7 @@ function App() {
           <QuestionContext.Provider value={question_val}>
             <Route path="/" exact component={Home} />
             <Route path="/questionpage" component={QuestionPage}/>
+            <Route path="/questionroute" component={QuestionRoute}/>
           </QuestionContext.Provider>
         </ENVContext.Provider>
         </UserContext.Provider>

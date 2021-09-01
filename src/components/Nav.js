@@ -9,7 +9,7 @@ export function Nav() {
   const { user, setUser } = useContext(UserContext);
 
     const logout_handle = async () => {
-        await fetch('https://stackandflow-backend.herokuapp.com/api/logout', {
+        await fetch('http://localhost:8000/api/logout', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

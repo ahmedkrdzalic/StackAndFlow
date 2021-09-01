@@ -12,6 +12,7 @@ export function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
 
   const login_func = async (e) => {
     e.preventDefault();
@@ -20,7 +21,9 @@ export function Login() {
         return;
     }
 
-    const response = await fetch('https://stackandflow-backend.herokuapp.com/api/login', {
+    //https://stackandflow-backend.herokuapp.com/api/login
+    //http://localhost:8000/api
+    const response = await fetch(env + 'login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         credentials: 'include',
@@ -30,7 +33,13 @@ export function Login() {
         })
     });
     const content = await response.json();
-    setUser(content);
+
+    if (content.message == "success"){
+      setUser(content.user);
+    }
+    else {
+      return;
+    }
   }
 
   const validate = () => {
@@ -44,11 +53,10 @@ export function Login() {
     }
   }
 
-
-
-  if(user){
-  return <Redirect to="/"/>;
+  if (user){
+    return <Redirect to="/"/>;
   }
+
 
   return (
     <div>
